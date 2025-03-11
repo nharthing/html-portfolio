@@ -1,0 +1,177 @@
+/*
+Glückshaus is a medieval gambling game designed to be played while drinking and talking. 
+             
+Jenn Dwyer
+SDEV 117 T/R 10:00 AM
+HTML Pages: Gluckshaus.html
+CSS sheet: Gluckshaus.css
+JavaScript: gluckshaus.js 
+
+*/
+
+* {
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+    /* border: 1px solid yellowgreen;   */
+  }
+
+body {
+    background-image: linear-gradient(black, grey);
+    color: white;
+}
+
+#startPlay {
+    /* min-height: 1fr; */
+    display: block;
+    margin: auto;
+}
+
+.form-header, .player-heading {
+    display: flex;
+    justify-content: space-evenly;
+}
+
+div > .coinButton {
+    display: inline-block;
+    margin: 1% 2%;
+    position: relative;
+    left: 40%;
+}
+
+.player-heading {
+    display: none;
+}
+
+.board {
+    margin-left: 10%;
+    margin-right: 10%;
+    color: black;
+}
+
+/* .board div {
+    min-height: 85px;
+} */
+
+.GHTitle H3 {
+    text-align: center;
+    font-family:'Courier New', Courier, monospace;
+    margin-top: 25px;
+    margin-bottom: 25px;
+    margin-left: 30%;
+    margin-right: 30%;
+    font-size: 1.5em; 
+        
+}
+
+#hoverElement {
+    display: none;
+}
+
+.GHrules p {
+    text-align: center;
+    font-family:'Courier New', Courier, monospace;
+    text-decoration: double;
+}
+
+.board {
+    display: grid;
+    grid-template-columns: repeat(3, 0.4fr);
+    grid-template-rows: repeat(6, 0.4fr);
+    text-align: center;
+    gap: 10px;
+    padding-left: 10%;
+    padding-right: 10%;
+    padding-bottom: 5%;
+  }
+
+  .left_pad {
+    padding-left: 1fr;
+  }
+
+  .right_pad {
+    padding-right: 5%;
+  }
+
+  .top_bottom {
+    padding-left: 5%;
+    padding-right: 5%;
+  }
+
+.coincount, .coinButton {
+    text-align: center;
+    vertical-align: middle;
+}
+
+
+
+#twelve {
+    grid-column: 1 / -1;
+    grid-row: 1 / 2;
+    background-color: red;
+    border: 1px black solid;
+}
+
+#eleven {
+    grid-column: 1 / 2;
+    grid-row: 2 / 3;
+    background-color: orange;
+    border: 1px black solid;
+}
+
+#seven {
+    grid-column: 2 / 3;
+    grid-row: 3 / 4;
+    background-color: gold;
+    border: 1px black solid;
+    
+}
+
+#three {
+    grid-column: 3 / 4;
+    grid-row: 2 / 3;
+    background-color: green;
+    border: 1px black solid;
+}
+
+#ten {
+    grid-column: 2 / 3;
+    grid-row: 2 / 3;
+    background-color: aqua;
+    border: 1px black solid;
+}
+
+#six {
+    grid-column: 1 / 2;
+    grid-row: 4 / 5;
+    background-color: purple;
+    border: 1px black solid;
+}
+
+#nine {
+    grid-column: 2 / 3;
+    grid-row: 4 / 5;
+    background-color: indigo;
+    border: 1px black solid;
+}
+
+#five {
+    grid-column: 3 / 4;
+    grid-row: 4 / 5;
+    background-color: pink;
+    border: 1px black solid;
+}
+
+#eight {
+    grid-column: 2 / 3;
+    grid-row: 5 / 6;
+    background-color: black;
+    border: 1px black solid;
+    color: white;
+}
+
+#two {
+    grid-column: 1 / -1;
+    grid-row: 6 / 7;
+    background-color: beige;
+    border: 1px black solid;
+}

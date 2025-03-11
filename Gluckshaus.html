@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <title>SDEV 117 Final Project - Jenn Dwyer - Gl&uuml;ckshaus</title>
+        <!-- Glückshaus is a medieval gambling game designed to be played while drinking and talking. 
+             You play with two dice, each with six sides, and coins. 
+             
+             Jenn Dwyer
+             SDEV 117 T/R 10:00 AM
+             HTML Pages: Gluckshaus.html
+             CSS sheet: Gluckshaus.css
+             JavaScript: gluckshaus.js
+             
+             Reminder from Prof. Lopez: "please use aria-labelledby to mark the labels for sections" 
+            
+            -->
+
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+        <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"> -->
+        <link rel="stylesheet" href="Gluckshaus.css">
+    </head>
+
+    
+
+    <body>
+
+        <!-- TITLE -->
+
+         <section aria-labelledby="Title">
+            <div class="GHTitle" >
+                <H3 id="hoverElement">GLÜCKSHAUS (House of Fortune)</H2>
+            </div>  
+         </section> 
+
+        <!-- FORM AREA -->
+
+        <section aria-labelledby="form">
+            <div class="form-header">
+                <div class="justify-left">
+                    <form class="player1form">
+                        <label for="p1name">Player 1 name: </label>
+                        &nbsp; &nbsp; 
+                        <br>
+                        <input type="text" id="p1name" name="p1name" onfocus="highlightInput(this)" onblur="restoreInput(this)">
+                    </form>
+                </div>
+
+                <div class="justify-right">
+                    <form class="player2form">
+                        <label for="p2name">Player 2 name: </label>
+                        &nbsp; &nbsp;
+                        <br>
+                        <input type="text" id="p2name" name="p2name" onfocus="highlightInput(this)" onblur="restoreInput(this)">
+                    </form>
+                </div>
+            
+            </div>
+
+            <button type="button" id="startPlay" onclick="startPlay()">START PLAYING!</button>
+        </section>
+
+
+
+        <!-- PLAYER HEADER -->
+
+        <section aria-labelledby="Player Heading">
+            <div class="player-heading">
+                <div class="justify-left" id="Player1_info">
+                    <span id="p1n">Player1</span>, coins: <span id="p1coins">p1coins</span>
+                </div>
+                <button id="rollDice" onclick="throwDice()"><span id="playerTurn"></span> ROLL</button>
+                <!--button id="hoverElement" onclick="throwDice()"><span id="playerTurn"></span> ROLL </button> -->
+                <div class="justify-right" id="Player2_info">
+                    <span id="p2n">Player2</span>, coins: <span id="p2coins">p2coins</span>
+                </div>
+            </div>
+            <div>
+                <button class="coinButton" id="addCoin">ADD COIN<span></span></button>
+                <button class="coinButton" id="takeCoin">TAKE COIN<span></span></button>
+            </div>
+
+        </section>
+
+        <br>
+
+        <!-- GAME BOARD -->
+
+        <section aria-labelledby="Gameboard">
+            <div class="board">
+                
+                <div id="twelve" class="top_bottom">
+                    <p id="click12"><strong>12</strong></p>
+                    <!-- <p>Coins: <span class="coincount" id="coinbox12">0</span></p> -->
+                </div>
+
+                <div id="eleven" class="left_pad">
+                    <p id="click11"><strong>11</strong></p>
+                    <p>Coins: <span class="coincount" id="coinbox11">0</span></p>
+                </div>
+
+                <div id="ten">
+                    <p id="click10"><strong>10</strong></p>
+                    <p>Coins: <span class="coincount" id="coinbox10">0</span></p>
+                </div>
+
+                <div id="three" class="right_pad">
+                    <p id="click3"><strong>3</strong></p>
+                    <p>Coins: <span class="coincount" id="coinbox3">0</span></p>
+                </div>
+
+                <div id="seven">
+                    <p id="click7"><strong>7</strong></p>
+                    <p>Coins: <span class="coincount" id="coinbox7">0</span></p>
+                    
+                </div>
+
+                <div id="six" class="left_pad">
+                    <p id="click6"><strong>6</strong></p>
+                    <p>Coins: <span class="coincount" id="coinbox6">0</span></p>
+                </div>
+
+                <div id="nine">
+                    <p id="click9"><strong>9</strong></p>
+                    <p>Coins: <span class="coincount" id="coinbox9">0</span></p>
+                </div>
+
+                <div id="five" class="right_pad">
+                    <p id="click5"><strong>5</strong></p>
+                    <p>Coins: <span class="coincount" id="coinbox5">0</span></p>
+                </div>
+
+                <div id="eight">
+                    <p id="click8"><strong>8</strong></p>
+                    <p>Coins: <span class="coincount" id="coinbox8">0</span></p>
+                </div>
+
+                <div id="two" class="top_bottom">
+                    <p id="click2"><strong>2</strong></p>
+                    <!-- <p>Coins: <span class="coincount" id="coinbox2">0</span></p> -->
+                </div>
+
+            </div>
+        </section>
+
+        <!-- RULES -->
+        <section aria-labelledby="The Rules">
+            <div class="GHrules">
+                <p>THE RULES</p>
+                <p>A Player who wants to join the game must place a coin onto the number 7.</p>
+                <p>
+                    One Player after another throws the two six-sided dice:<br>
+                    <br>
+                    If they throw a 12, they are KING and WIN THE GAME plus ALL THE COINS ON THE BOARD!<br>
+                    If they throw a 7, they are a WEDDING GUEST and have to bring gift for "dowry": a coin for number 7.<br>
+                    If they throw a 2, they are the LUCKY PIG and can take all the coins on the board EXCEPT for number 7.<br>
+                    If they throw a 4, absolutely nothing happens--there is no number 4 on the board. It's like a lost turn.<br>
+                    If they throw any other number, they have to put a coin onto the number if it's empty. If it's not empty, they can take the coin(s) that are there!<br>
+                    <br>
+                    FIRST PLAYER TO BECOME KING WINS!
+                </p>
+            </div>
+        </section>
+        
+        <!-- SCRIPT -->
+        <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+        <script src="gluckshaus.js"></script>
+
+    </body>
+</html>
