@@ -23,7 +23,7 @@ let gameOver = false; // start of game = game not over
 let playerTurn = "p1"; // initially set to player 1
 let dieThrowResult = 0; // start of game = nothing in dice roll since dice haven't been rolled yet
 const arrayLen = 13; // length for coinbox - reworked to make this use original dieThrowRoll value.
-let hovOver = document.getElementById("hoverElement"); // for troubleshooting purposes
+//let hovOver = document.getElementById("hoverElement"); // for troubleshooting purposes
 
 
 let p1coins = 19; // player 1 total coins is 19 because you have to pay in to coinbox for 7 to play
@@ -49,7 +49,6 @@ coinbox[7] = 2; // initialize the coins in box 7, wedding, to one coin in for ea
 
 // Pop up the rules into another window for the users. (They never scroll down anyway; I know I don't.)
 
-
 let newWindow = window.open("about:blank", "_blank", "top=200,left=500,width=600,height=500"); // define new window
 
 if (newWindow) { // if the new window is initialized properly
@@ -61,7 +60,7 @@ if (newWindow) { // if the new window is initialized properly
     <p>If they throw a 2, they are the LUCKY PIG and can take all the coins on the board EXCEPT for number 7.</p>\
     <p>If they throw a 4, absolutely nothing happens--there is no number 4 on the board. It's like a lost turn.<p>\
     <p>If they throw any other number, they have to put a coin onto the number if it's empty.<br>\
-       If it's not empty, they can take the coin(s) that are there!\
+       If it's not empty, they can take a coin!\
     </p>\
     <p>FIRST PLAYER TO BECOME KING WINS!</p>");
     newWindow.document.close(); // define the end of the doc and close out the stream writer
@@ -69,13 +68,10 @@ if (newWindow) { // if the new window is initialized properly
 
 // Those instructions are gonna get in the way of play. Let's just pop them up for 15 seconds.
 setTimeout(() => {  // the arrow operator! short function syntax. Also allows us to pass through the info to timeout.
-    if (newWindow) {
-        newWindow.close();
+    if (newWindow) { // if the user still has the window open
+        newWindow.close(); // close it
     }
 }, 15000);
-
-// This didn't work
-//setTimeout(newWindow.close,5000);
 
 
 // *********** START PLAY SECTION ***********
@@ -91,12 +87,12 @@ function startPlay() {
 
     // get player names
     let p1fname = document.getElementById('p1name').value;
-    console.log("Player 1 full name string: " + p1fname);
-    console.log("Player 1 first name string: " + p1fname.substring(0, p1fname.indexOf(" ")));
+    //("Player 1 full name string: " + p1fname);
+    //console.log("Player 1 first name string: " + p1fname.substring(0, p1fname.indexOf(" ")));
 
     let p2fname = document.getElementById('p2name').value;
-    console.log("Player 2 full name string: " + p2fname);
-    console.log("Player 2 first name string: " + p2fname.substring(0, p2fname.indexOf(" ")));
+    //console.log("Player 2 full name string: " + p2fname);
+    //console.log("Player 2 first name string: " + p2fname.substring(0, p2fname.indexOf(" ")));
 
     
     let p1name1 = document.getElementById('p1name').innerHTML = document.getElementById('p1name').value;
@@ -104,7 +100,7 @@ function startPlay() {
     
 
     
-    // hide the first two forms - should be player1form and player2form, and hide the PLAYER ROLL button
+    // hide the first two forms (player1form and player2form), and hide the PLAYER ROLL button
     document.forms[0].style.display = "none";
     document.forms[1].style.display = "none";
 
@@ -139,12 +135,12 @@ function startPlay() {
 // TEST AREA
 // Just using the mouseover for testing purposes, pay him no mind now.
 /************* mouseover for testing *****/
-hovOver.addEventListener("mouseover", function() {
+//hovOver.addEventListener("mouseover", function() {
     //alert("Mouse is over the element! This means successful event handling.");
     //chkGameOver();
     //throwDice();
-    }
-);
+    //}
+//);
 
 
 // *********** DO THE THINGS ***********
@@ -157,7 +153,7 @@ hovOver.addEventListener("mouseover", function() {
 // Once the user has gotten this far, they get to "throw the dice".
 // The bulk of game play happens once the dice are rolled.
 // We check first to make absolutely sure someone didn't just win the game, such as if coins are zero.
-// more comments go here
+// If the game isn't over and the dice are thrown, we evaluate the result for further actioning.
 // 
 function throwDice() {
     chkGameOver(); // let's make sure the game isn't actually over already
@@ -171,7 +167,7 @@ function throwDice() {
     resultLogic(); // we have our dieThrowResult, let's use it to determine what the player can do
         
     //rollDice id - shows whose turn it is on the Roll button 
-    console.log("throwdice player turn: " + playerTurn);
+    //console.log("throwdice player turn: " + playerTurn);
     document.getElementById('playerTurn').innerHTML = playerTurn;
     //document.getElementById('addCoin').innerHTML = "";
 
@@ -180,12 +176,15 @@ function throwDice() {
 
 // RESULT LOGIC FUNCTION
 // Our player has thrown the dice and their Fate has been decided. 
-// On a 12 the player wins, so we deal with the win and end the game
+// On a 12 the player wins, so we deal with the win logic and end the game
 // On a 7 a player pays a coin into the dowry. If they have zero coins after then they're out of the game.
+// On a 4 they lose a turn. There is no space labeled 4 on the board, by design. 
+// On a 2 they win all the coins on the board except those in the coin box for #7, the Dowry. 
+// On any other roll, they HAVE to place a coin if the space is empty, or they can pull a coin if the space has one. (or more)
 // 
 
 function resultLogic() {
-       console.log("result is: " + dieThrowResult + " for player " + playerTurn);
+       //console.log("result is: " + dieThrowResult + " for player " + playerTurn);
        if (!gameOver) {
         switch (dieThrowResult) {
             case 12:
@@ -207,7 +206,7 @@ function resultLogic() {
                 updatePlayerTurn();
                 break;
             default:                                // add a coin (mandatory if space empty) or option to take a coin
-                console.log("Kicking into normalRollResult with dieThrowResult passed");
+                //console.log("Kicking into normalRollResult with dieThrowResult passed");
                 normalRollResult(dieThrowResult);  
         }
     }
@@ -220,16 +219,16 @@ function resultLogic() {
 // *********** INITIAL ADD TO DOWRY (7) **********
 // each Player has to "pay to play", antes in a coin to the wedding dowry (#7)
 function addDowry() {
-    if (playerTurn === "p1") {
+    if ((playerTurn === "p1") && (p1coins > 0)) {
         p1coins = p1coins - 1;
         document.getElementById('p1coins').innerHTML = p1coins;
-        chkGameOver(gameOver);
-    } else if (playerTurn === "p2") {
+        coinbox[7] += 1;
+    } else if ((playerTurn === "p2") && (p2coins > 0)) {
         p2coins = p2coins - 1;
         document.getElementById('p2coins').innerHTML = p2coins;
-        chkGameOver(gameOver);
+        coinbox[7] += 1;
     }
-    coinbox[7] += 1;
+    chkGameOver(gameOver);
     document.getElementById('coinbox7').innerHTML = coinbox[7];
 }
 
@@ -241,26 +240,27 @@ function luckyPig() {
     for (i = 3; i < 12; i++){ 
         // take all coinbox coins from all boxes starting at coinbox[3] and excluding coinbox[7]
         // #0 is our value holder, #1 has no corresponding space on board, #2 is the lucky pig (we're there), 
-        // #4 doesn't exist, and you can't take #7 unless you rolled a 12 (you're king) - no coins there
-        // add them to coinbox[0] if they are not in #7
+        // #4 doesn't exist, and you can't take #7 unless you rolled a 12 (you're king) - no coins in 12.
+        // Add the coins to coinbox[0] if they are not in #7
         if (i != 7) { // don't touch dowry
         coinbox[0] += coinbox[i]; 
-        console.log("coinbox[" + i + "], " + coinbox[i] + " and coinbox[0] " + coinbox[0]);
+        //console.log("coinbox[" + i + "], " + coinbox[i] + " and coinbox[0] " + coinbox[0]);
         coinbox[i] = 0;
         }
     }
 
     // add coins to p1 or p2 coins based on player turn
-    if (playerTurn === "p1") {
+    if ((playerTurn === "p1") && (p1coins > 0)) {
         p1coins += coinbox[0];
         document.getElementById('p1coins').innerHTML = p1coins;
-    } else if (playerTurn === "p2") {
+    } else if ((playerTurn === "p2") && (p2coins > 0)) {
         p2coins += coinbox[0];
         document.getElementById('p2coins').innerHTML = p2coins;
     }
 
     // zero out coinbox[0], {3, 5, 6, 8-11}
-    coinbox[0] = 0;
+    // because we aren't going to zero out the Dowry this is a separate function than zeroOutCoins()
+    coinbox[0] = 0; // if we don't zero out, it keeps accumulating coins erroneously
     coinbox[3] = 0;
     document.getElementById('coinbox3').innerHTML = coinbox[3];
     coinbox[5] = 0;
@@ -280,7 +280,8 @@ function luckyPig() {
 // ************* KING GAME OVER (12) *********
 // Winner takes all coins
 // Winner gets a message telling them they won
-// Winner has a great time
+// 
+
 function kingGameOver() {
 
     gameOver = true;
@@ -294,7 +295,7 @@ function kingGameOver() {
     for (i = 3; i < 12; i++){ 
         // take all coins
         coinbox[0] += coinbox[i]; 
-        console.log("coinbox[" + i + "], " + coinbox[i] + " and coinbox[0] " + coinbox[0]);
+        //console.log("coinbox[" + i + "], " + coinbox[i] + " and coinbox[0] " + coinbox[0]);
         coinbox[i] = 0;
     }
 
@@ -308,6 +309,135 @@ function kingGameOver() {
     }
 
     // zero out the coin counts
+    zeroOutCoins();
+
+    document.getElementById('rollDice').style.visibility = 'hidden';
+    alert("Game over");
+    
+}
+
+// ************* NORMAL ROLL RESULT ************
+// - not a 2, 4, 7, or 12
+function normalRollResult(dieThrowResult){
+  
+    let coinboxUpdate = "coinbox" + dieThrowResult;
+    let addCoinButton = document.getElementById("addCoin");
+    let takeCoinButton = document.getElementById("takeCoin");
+    
+
+    // enable or disable button based on whether there's a coin to take
+    
+    if ((coinbox[dieThrowResult] === 0) && (!gameOver)) {
+            addCoinButton.disabled = false; // can only add coin
+            takeCoinButton.disabled = true;
+    } else if ((coinbox[dieThrowResult] > 0) && (!gameOver)) { 
+            addCoinButton.disabled = false; // can add coin
+            takeCoinButton.disabled = false; // can take coin
+    }
+    document.getElementById('addCoin').innerHTML = "ADD COIN TO " + dieThrowResult;
+    
+    if (!gameOver){
+            addCoinButton.onclick = function(){
+                //console.log("It's player " + playerTurn +"'s turn, and we are adding a coin.")
+                coinbox[dieThrowResult] += 1;
+                addCoinButton.disabled = true; //disabled after click, enabled (or not) next roll
+                takeCoinButton.disabled = true; // (ditto)
+
+                if (playerTurn === "p1") {
+                    p1coins = p1coins - 1;
+                    //alert("p1coins: " + p1coins);
+
+                    document.getElementById('p1coins').innerHTML = p1coins;
+                    document.getElementById(coinboxUpdate).innerHTML = coinbox[dieThrowResult];
+                    //console.log("I'm updating the player turn to p2 from p1 as part of addCoinButton.onclick")
+                    updatePlayerTurn();
+                    document.getElementById('playerTurn').innerHTML = playerTurn;
+
+                } else if (playerTurn === "p2"){ // else it's player 2's turn, so...
+                    //console.log("It's player " + playerTurn +"'s turn, and we are adding a coin.")
+                    p2coins = p2coins - 1;
+                    //alert("p2coins: " + p2coins);
+                    document.getElementById('p2coins').innerHTML = p2coins;
+                    //console.log(coinbox[dieThrowResult]);
+                    document.getElementById(coinboxUpdate).innerHTML = coinbox[dieThrowResult];  
+                    //console.log("I'm updating the player turn to p1 from p2 as part of addCoinButton.onclick")
+                    updatePlayerTurn();
+                    document.getElementById('playerTurn').innerHTML = playerTurn;
+                }
+            } 
+        }  
+
+
+        
+        if (!gameOver){
+            takeCoinButton.onclick = function(){
+                //console.log("TOOK COIN, changing player now");
+                coinbox[dieThrowResult] -= 1;
+                addCoinButton.disabled = true; //disabled after click, enabled (or not) next roll
+                takeCoinButton.disabled = true; // (ditto)
+                if (playerTurn === "p1") {
+                    p1coins = p1coins + 1;
+                    //alert("p1coins: " + p1coins);
+
+                    document.getElementById('p1coins').innerHTML = p1coins;
+                    document.getElementById(coinboxUpdate).innerHTML = coinbox[dieThrowResult];
+                    ///console.log("I'm updating the player turn to p2 from p1 as part of addCoinButton.onclick")
+                    updatePlayerTurn();
+                    document.getElementById('playerTurn').innerHTML = playerTurn;
+
+                } else if (playerTurn === "p2"){ // else it was player 2's turn, so...
+                    //console.log("It's player " + playerTurn +"'s turn, and we are adding a coin.")
+                    p2coins = p2coins + 1;
+                    //alert("p2coins: " + p2coins);
+                    document.getElementById('p2coins').innerHTML = p2coins;
+                    //console.log(coinbox[dieThrowResult]);
+                    document.getElementById(coinboxUpdate).innerHTML = coinbox[dieThrowResult];  
+                    //console.log("I'm updating the player turn to p1 from p2 as part of addCoinButton.onclick")
+                    updatePlayerTurn();
+                    document.getElementById('playerTurn').innerHTML = playerTurn;
+                }   
+            }
+        }
+}
+
+
+// ************* UPDATE PLAYER TURN **********
+// switches between players; we need to keep track of whose turn it is
+function updatePlayerTurn() {
+    if (playerTurn === "p1") { // if p1, make p2
+        playerTurn = "p2";
+    } else if (playerTurn === "p2") { // already p2, make p1
+        playerTurn = "p1";
+    }
+    //console.log("Player's turn: " + playerTurn);
+}
+
+
+// ************** GAME OVER CHECK ************
+// REQUIREMENTS MET ->
+//       At least one javascript operator (&&, ===)
+
+// Game is over when coins are out
+function chkGameOver(gameOver) { 
+    if ((playerTurn === "p1") && (p1coins === 0)) {  //player1 is out of coins
+        gameOver = true;
+        document.getElementById('rollDice').style.visibility = 'hidden';
+        //addCoinButton.disabled = true; 
+        //takeCoinButton.disabled = true; 
+        alert("Game Over, PLAYER 1 is out of coins!");
+    } else if ((playerTurn === "p2") && (p2coins === 0)) { //player2 is out of coins
+        gameOver = true;
+        document.getElementById('rollDice').style.visibility = 'hidden';
+        //addCoinButton.disabled = true; 
+        //takeCoinButton.disabled = true; 
+        alert("Game Over, PLAYER 2 is out of coins!");
+    } 
+
+};
+
+function zeroOutCoins() {
+    // zero out the coin counts
+    
     let index = 0;
     for (index = 0; index < arrayLen; index++) { // iterate over the array to initialize all coin boxes to 0 coins
         coinbox[index] = 0;
@@ -321,122 +451,7 @@ function kingGameOver() {
     document.getElementById('coinbox9').innerHTML = coinbox[9];
     document.getElementById('coinbox10').innerHTML = coinbox[10];
     document.getElementById('coinbox11').innerHTML = coinbox[11];
-
-    document.getElementById('rollDice').style.visibility = 'hidden';
-    alert("Game over");
-    console.log(playerTurn = " has won the game.")
 }
-
-// ************* NORMAL ROLL RESULT ************
-// - not a 2, 4, 7, or 12
-function normalRollResult(dieThrowResult){
-   
-   let coinboxUpdate = "coinbox" + dieThrowResult;
-   let addCoinButton = document.getElementById("addCoin");
-   let takeCoinButton = document.getElementById("takeCoin");
-   
-
-   // enable or disable button based on whether there's a coin to take
-   if (coinbox[dieThrowResult] === 0) {
-        addCoinButton.disabled = false; // can only add coin
-        takeCoinButton.disabled = true;
-   } else if (coinbox[dieThrowResult] > 0) { 
-        addCoinButton.disabled = false; // can add coin
-        takeCoinButton.disabled = false; // can take coin
-   }
-   document.getElementById('addCoin').innerHTML = "ADD COIN TO " + dieThrowResult;
-   
-    addCoinButton.onclick = function(){
-        console.log("It's player " + playerTurn +"'s turn, and we are adding a coin.")
-        coinbox[dieThrowResult] += 1;
-        addCoinButton.disabled = true; //disabled after click, enabled (or not) next roll
-        takeCoinButton.disabled = true; // (ditto)
-
-        if (playerTurn === "p1") {
-            p1coins = p1coins - 1;
-            alert("p1coins: " + p1coins);
-
-            document.getElementById('p1coins').innerHTML = p1coins;
-            document.getElementById(coinboxUpdate).innerHTML = coinbox[dieThrowResult];
-            console.log("I'm updating the player turn to p2 from p1 as part of addCoinButton.onclick")
-            updatePlayerTurn();
-            document.getElementById('playerTurn').innerHTML = playerTurn;
-
-        } else if (playerTurn === "p2"){ // else it's player 2's turn, so...
-            console.log("It's player " + playerTurn +"'s turn, and we are adding a coin.")
-            p2coins = p2coins - 1;
-            alert("p2coins: " + p2coins);
-            document.getElementById('p2coins').innerHTML = p2coins;
-            console.log(coinbox[dieThrowResult]);
-            document.getElementById(coinboxUpdate).innerHTML = coinbox[dieThrowResult];  
-            console.log("I'm updating the player turn to p1 from p2 as part of addCoinButton.onclick")
-            updatePlayerTurn();
-            document.getElementById('playerTurn').innerHTML = playerTurn;
-        }
-    }
-
-    takeCoinButton.onclick = function(){
-        // finish this up
-        console.log("TOOK COIN, changing player now");
-        coinbox[dieThrowResult] -= 1;
-        addCoinButton.disabled = true; //disabled after click, enabled (or not) next roll
-        takeCoinButton.disabled = true; // (ditto)
-        if (playerTurn === "p1") {
-            p1coins = p1coins + 1;
-            alert("p1coins: " + p1coins);
-
-            document.getElementById('p1coins').innerHTML = p1coins;
-            document.getElementById(coinboxUpdate).innerHTML = coinbox[dieThrowResult];
-            console.log("I'm updating the player turn to p2 from p1 as part of addCoinButton.onclick")
-            updatePlayerTurn();
-            document.getElementById('playerTurn').innerHTML = playerTurn;
-
-        } else if (playerTurn === "p2"){ // else it was player 2's turn, so...
-            console.log("It's player " + playerTurn +"'s turn, and we are adding a coin.")
-            p2coins = p2coins + 1;
-            alert("p2coins: " + p2coins);
-            document.getElementById('p2coins').innerHTML = p2coins;
-            console.log(coinbox[dieThrowResult]);
-            document.getElementById(coinboxUpdate).innerHTML = coinbox[dieThrowResult];  
-            console.log("I'm updating the player turn to p1 from p2 as part of addCoinButton.onclick")
-            updatePlayerTurn();
-            document.getElementById('playerTurn').innerHTML = playerTurn;
-        }   
-    }
-
-}
-
-
-// ************* UPDATE PLAYER TURN **********
-// switches between players; we need to keep track of whose turn it is
-function updatePlayerTurn() {
-    if (playerTurn === "p1") { // if p1, make p2
-        playerTurn = "p2";
-    } else if (playerTurn === "p2") { // already p2, make p1
-        playerTurn = "p1";
-    }
-    console.log("Player's turn: " + playerTurn);
-}
-
-
-// ************** GAME OVER CHECK ************
-// REQUIREMENTS MET ->
-//       At least one javascript operator (&&, ===)
-
-// Game is over when coins are out
-function chkGameOver(gameOver) { 
-    if ((playerTurn === "p1") && (p1coins === 0)) {  //player1 is out of coins
-        gameOver = true;
-        document.getElementById('rollDice').style.visibility = 'hidden';
-        alert("Game Over, PLAYER 1 is out of coins!");
-    } else if ((playerTurn === "p2") && (p2coins === 0)) { //player2 is out of coins
-        gameOver = true;
-        document.getElementById('rollDice').style.visibility = 'hidden';
-        alert("Game Over, PLAYER 2 is out of coins!");
-    } 
-
-};
-
 
 // ******** FUNCTIONS CLASS LESSON 02/11/2025 ******** */
 // This highlights the fields where the players enter their names when they click on it.
